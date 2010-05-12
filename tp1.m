@@ -2,7 +2,7 @@ clc;
 close all;
 clear all;
 
-clients = load('../clientes.csv');
+clients = load('clientes.csv');
 PA = [];
 PAC = [];
 p = [];
