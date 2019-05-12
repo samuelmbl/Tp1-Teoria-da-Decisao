@@ -5,10 +5,7 @@ clear all;
 clients = load('clientes.csv');
 PA = [];
 PAC = [];
-p = [];
-c = [];
-b = [];
-d = [];
+dist = [];
 
 PA_max = 100;
 c_max = 500;
@@ -21,12 +18,19 @@ y_max = 800;
 sigma = 0.25;
 
 [PA, PAC, dist] = initialSol(clients, PA_max, x_max, y_max);
+figure(1)
+plot(PA(:,1), PA(:,2), 'b.');
 
-[t0, PA, count] = initialTDist(PA, clients, PAC, dist, sigma);
+[t0, PA, count] = initialT(PA, clients, PAC, dist, sigma, 'Distance');
 
+figure(1)
+hold on
+plot(PA(:,1), PA(:,2), 'r.');
+legend('Inital sol', 'initialT sol');
 
-
+figure(2)
 plot(clients(:,1), clients(:,2), 'b.', PA(:,1), PA(:,2), '.r');
+title('Solution after InitialTDist');
 
 figure
 plot(PAC, '.')
