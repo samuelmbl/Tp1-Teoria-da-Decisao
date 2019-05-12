@@ -13,10 +13,11 @@
 % =========================================================================
 
 
-function y = uniforme_mutation(x,ub,lb,sigma,n)
+function y = uniforme_mutation(x,ub,lb,sigma)
 
-D = 2*rand(length(x),n) - 1;
-delta = sigma*(ub - lb).*D;
+D = 2*rand(length(x),length(x(1,:))) - 1;
+delta(:,1) = sigma*(ub(1) - lb(1))*D(:,1);
+delta(:,2) = sigma*(ub(2) - lb(2))*D(:,2);
 
 y = x + 1*delta;
 y = boxConstraints(y, ub, lb);

@@ -13,9 +13,12 @@
 % =========================================================================
 
 
-function y = neighbor(PAPos,ub,lb,sigma,n)
-%(x,ub,lb,sigma,xlimites,n)
+function y = neighbor(PAPos,ub,lb,sigma)
+%(x,ub,lb,sigma,xlimites)
 %PAPos => [X1 Y1; X2 Y2; ...] Posição de cada PA
+%ub =>
+%lb =>
+%sigma =>
 
     size = length(PAPos);
 
@@ -24,10 +27,10 @@ function y = neighbor(PAPos,ub,lb,sigma,n)
     % CliAtendPorPA = [PANum, histc(PACli(:),PANum)];
     % CliAtendPorPAOrder = sortrows(CliAtendPorPA,2);
     % PioresPAs = CliAtendPorPAOrder(1:3,1); % PAs que atendem menos clientes
-    if i <= 0.2
-        y = uniforme_mutation(PAPos,ub, lb,sigma,n);
+    if i <= 0.33
+        y = uniforme_mutation(PAPos,ub, lb,sigma);
 
-    elseif i <= 0.6
+    elseif i <= 0.5
         y = PAPos;
         r = randperm(size,4);
         p = rand();
@@ -38,8 +41,8 @@ function y = neighbor(PAPos,ub,lb,sigma,n)
             y(r(2),1) = PAPos(r(1),1);
 
             % Switch Y values
-            y(r(3),2) = PAPos(r(4),2);
-            y(r(4),2) = PAPos(r(3),2);
+            y(r(1),2) = PAPos(r(3),2);
+            y(r(3),2) = PAPos(r(1),2);
 
         elseif (p < 0.6)
             % Switch X values
@@ -52,9 +55,9 @@ function y = neighbor(PAPos,ub,lb,sigma,n)
             y(r(4),2) = PAPos(r(3),2);
         end
 
-    else %Shift
+    elseif i <= 0.75 %Shift
         y = PAPos;
-        shiftSize = 5;
+        shiftSize = 10;
         r = randperm(size -(shiftSize + 1),2);
         p = rand();
 
@@ -68,19 +71,27 @@ function y = neighbor(PAPos,ub,lb,sigma,n)
             idcShift = r(2) + shiftSize;
             y(r(2):idcShift-1,2) = y(r(2)+1:idcShift,2);
             y(idcShift,2) = PAPos(r(2),2);
-
         elseif (p < 0.6)
             %troca x
             idcShift = r(1) + shiftSize;
             y(r(1):idcShift-1,1) = y(r(1)+1:idcShift,1);
             y(idcShift,1) = PAPos(r(1),1);
-
         else
-
             idcShift = r(1) + shiftSize;
             y(r(1):idcShift-1,2) = y(r(1)+1:idcShift,2);
             y(idcShift,2) = PAPos(r(1),2);
         end
+    else    % Adicionar/Remover Ponto de Acesso
+        y = PAPos;
+        p = rand();
+        if(p < 0.7), %Probabilidade de remover um ponto
+            point_removed = randperm(size, 1);
+            y(point_removed:size-1,:) = PAPos((point_removed+1):size,:);
+        elseif(size <100), %Probabilidade de adicionar um ponto
+            y(end,:) = [(ub(1)-lb(1))*rand(), (ub(2)-lb(2))*rand()];
+        end;
+        
+    end
 end
 
 

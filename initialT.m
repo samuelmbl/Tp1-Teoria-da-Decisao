@@ -1,57 +1,40 @@
-%==========================================================================
-% Universidade Federal de Minas Gerais
-% Escola de Engenharia da UFMG
-% Depto. de Engenharia Elétrica
-%
-% Autor:
-%   Lucas S. Batista
-%
-% Atualização: 26/09/2018
-%
-% Nota:
-%   Define a temperatura inicial.
-% =========================================================================
-
-
-function [to,x,jx,nfe] = initialT(x,custo,nfe,n)
-
-% Problema de Designação Simples:
-% Considere que existem n tarefas e n agentes, de tal forma
-% que cada tarefa deve ser atribuída a um agente e cada
-% agente só pode receber uma tarefa. A execução da tarefa i
-% pelo agente j tem um custo cij. Formule um problema que
-% atribua as tarefas de forma a minimizar o custo total de
-% execução.
-
-N   = 100;      % número de testes
-tau = 0.20;     % taxa de aceitação inicial
-X   = zeros(N,n);
-jX  = zeros(N,1);
-
-jx  = fobj(x,custo,n);
-nfe = nfe + 1;
-X(1,:) = x;
-jX(1)  = jx;
-
-i = 1;
-DeltaE = 100;
-for k = 2:N,
-    X(k,:) = neighbor(x);
-    jX(k)  = fobj(X(k,:),custo,n);
-    nfe = nfe + 1; 
+function [to, PA, count] = initialT(PA_ref, clients, PAC, dist, sigma, Type)
+%     Types:
+%     'Distance' = will calculate t0 with fobjDist(dist)
+%     'APTotal' = will calculate t0 with fobjAPTotal(dist)
+% 
+    count = 0;
+    PA = PA_ref;
     
-    DE = jX(k) - jx;
-    if DE > 0,
-        DeltaE(i) = DE;
-        i = i + 1;
-    end
+    N   = 1000;      % número de testes
+    tau = 0.20;     % taxa de aceitação inicial
+    
+    if strcmp(Type, 'Distance'),
+        x0 = fobjDist(dist);
+    elseif strcmp(Type, 'APTotal'),
+        x0 = fobjAPTotal(PA_ref);
+    end;
+    
+    DeltaE(1) = x0;
+    j = 1;
+    
+    for i=2:1:N,
+        [new_PA, PAC, new_dist] = generateNewSolution(PA_ref, clients, sigma);
+        
+    if strcmp(Type, 'Distance'),
+        xi = fobjDist(new_dist);
+    elseif strcmp(Type, 'APTotal'),
+        xi = fobjAPTotal(PA);
+    end;
+        DeltaE(j) = abs(xi-x0);
+        j = j + 1;
+        if(xi < x0),
+            PA = new_PA; %Melhor solucao encontrada ate o momento
+        end;
+        
+    end;
+
+    DeltaEM = mean(DeltaE);
+    to = - DeltaEM/log(tau);
 end
-
-[fmin,jmin] = min(jX);
-x  = X(jmin,:);
-jx = fmin;
-
-DeltaEM = mean(DeltaE);
-to = - DeltaEM/log(tau);
-
 
