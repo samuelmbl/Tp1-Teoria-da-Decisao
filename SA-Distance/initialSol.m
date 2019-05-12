@@ -1,20 +1,26 @@
-% Retorna uma solucao inicial no formato [PA, PAC], sendo:
-% PA: Posicao [x, y] de cada ponto de acesso
+% Retorna uma solucao inicial no formato [PA, PAC, dist], sendo:
+% PA: Posicao [x, y] de cada ponto de acesso.
 % PAC: Ponto de acesso que atendera cada cliente.
+% dist: Distancia entre o ponto de acesso e o cliente atendido.
 
-function [PA, PAC] = initialSol(pa_max, c_max, x_max, y_max)    
-    pa_en = pa_max;
-    PA = rand(pa_en, 2);
-    PA(:,1) = PA(:,1)*x_max;
-    PA(:,2) = PA(:,2)*y_max;
-    
+function [PA, PAC, dist] = initialSol(clients, pa_max, x_max, y_max)    
     PAC = [];
-%     TODO:
-%     1) Avaliar distancia de cada cliente para o ponto de acesso
-%     2) Definir PA de acordo com a proximidade
-%     3) Limitar banda em 150
-%     4) Repetir ate atender o numero minimo de clientes 
+    PA = [];
+    dist = [];
+    count = 0;
     
-    
+    pa_en = pa_max;
+    while(isempty(PAC) && count<100),
+        PA = rand(pa_en, 2);
+        PA(:,1) = PA(:,1)*x_max;
+        PA(:,2) = PA(:,2)*y_max;
 
+        [PAC, dist] = selectPACcalcDist(PA, clients);
+        count = count + 1;
+    end;
+    if(count == 100)
+        PAC = [];
+        PA = [];
+        dist = [];
+    end;
 end

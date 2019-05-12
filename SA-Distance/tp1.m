@@ -17,8 +17,12 @@ b_max = 150;
 d_max = 85;
 x_max = 800;
 y_max = 800;
-p_max = 100;
 
-[PA, PAC] = initialSol(p_max, c_max, x_max, y_max);
+[PA, PAC] = initialSol(clients, PA_max, x_max, y_max);
 
 plot(clients(:,1), clients(:,2), 'b.', PA(:,1), PA(:,2), '.r');
+
+figure
+plot(PAC, '.')
+
+length(PAC(PAC==0))
