@@ -13,9 +13,9 @@
 % =========================================================================
 
 
-function y = uniforme_mutation(x,ub,lb,sigma,n)
+function y = uniforme_mutation(x,ub,lb,sigma)
 
-D = 2*rand(length(x),n) - 1;
+D = 2*rand(length(x),size(x,2)) - 1;
 delta = sigma*(ub - lb).*D;
 
 y = x + 1*delta;

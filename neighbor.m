@@ -13,9 +13,12 @@
 % =========================================================================
 
 
-function y = neighbor(PAPos,ub,lb,sigma,n)
-%(x,ub,lb,sigma,xlimites,n)
+function y = neighbor(PAPos,ub,lb,sigma)
+%(x,ub,lb,sigma,xlimites)
 %PAPos => [X1 Y1; X2 Y2; ...] Posição de cada PA
+%ub =>
+%lb =>
+%sigma =>
 
     size = length(PAPos);
 
@@ -25,7 +28,7 @@ function y = neighbor(PAPos,ub,lb,sigma,n)
     % CliAtendPorPAOrder = sortrows(CliAtendPorPA,2);
     % PioresPAs = CliAtendPorPAOrder(1:3,1); % PAs que atendem menos clientes
     if i <= 0.2
-        y = uniforme_mutation(PAPos,ub, lb,sigma,n);
+        y = uniforme_mutation(PAPos,ub, lb,sigma);
 
     elseif i <= 0.6
         y = PAPos;

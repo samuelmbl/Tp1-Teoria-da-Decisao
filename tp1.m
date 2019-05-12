@@ -18,7 +18,13 @@ d_max = 85;
 x_max = 800;
 y_max = 800;
 
-[PA, PAC] = initialSol(clients, PA_max, x_max, y_max);
+sigma = 0.25;
+
+[PA, PAC, dist] = initialSol(clients, PA_max, x_max, y_max);
+
+[t0, PA, count] = initialTDist(PA, clients, PAC, dist, sigma);
+
+
 
 plot(clients(:,1), clients(:,2), 'b.', PA(:,1), PA(:,2), '.r');
 
