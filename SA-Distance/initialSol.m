@@ -1,39 +1,26 @@
-%==========================================================================
-% Universidade Federal de Minas Gerais
-% Escola de Engenharia da UFMG
-% Depto. de Engenharia Elétrica
-%
-% Autor:
-%   Lucas S. Batista
-%
-% Atualização: 26/09/2018
-%
-% Nota:
-%   Define a solução inicial.
-% =========================================================================
+% Retorna uma solucao inicial no formato [PA, PAC, dist], sendo:
+% PA: Posicao [x, y] de cada ponto de acesso.
+% PAC: Ponto de acesso que atendera cada cliente.
+% dist: Distancia entre o ponto de acesso e o cliente atendido.
 
+function [PA, PAC, dist] = initialSol(clients, pa_max, x_max, y_max)    
+    PAC = [];
+    PA = [];
+    dist = [];
+    count = 0;
+    
+    pa_en = pa_max;
+    while(isempty(PAC) && count<100),
+        PA = rand(pa_en, 2);
+        PA(:,1) = PA(:,1)*x_max;
+        PA(:,2) = PA(:,2)*y_max;
 
-function [x,custo,n] = initialSol()
-
-% Problema de Designação Simples:
-% Considere que existem n tarefas e n agentes, de tal forma
-% que cada tarefa deve ser atribuída a um agente e cada
-% agente só pode receber uma tarefa. A execução da tarefa i
-% pelo agente j tem um custo cij. Formule um problema que
-% atribua as tarefas de forma a minimizar o custo total de
-% execução.
-
-n = 10;
-
-% custo = [   t1 t2 ... tn
-%          a1
-%          a2
-%          ...
-%          an              ]
-custo = 100*rand(n,n);
-
-%      a1 a2 ... an
-% x = [tx ty ... tz]
-x = randperm(n);
-
-
+        [PAC, dist] = selectPACcalcDist(PA, clients);
+        count = count + 1;
+    end;
+    if(count == 100)
+        PAC = [];
+        PA = [];
+        dist = [];
+    end;
+end
