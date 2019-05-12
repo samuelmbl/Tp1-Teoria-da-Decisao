@@ -6,7 +6,7 @@ function [to, PA, count] = initialT(PA_ref, clients, PAC, dist, sigma, Type)
     count = 0;
     PA = PA_ref;
     
-    N   = 100;      % número de testes
+    N   = 1000;      % número de testes
     tau = 0.20;     % taxa de aceitação inicial
     
     if strcmp(Type, 'Distance'),

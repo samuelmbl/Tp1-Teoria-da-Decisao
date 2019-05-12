@@ -35,4 +35,8 @@ title('Solution after InitialTDist');
 figure
 plot(PAC, '.')
 
-length(PAC(PAC==0))
+[PAbest, PACbest, distbest, fobjbest, count, logfobj, logfobjbest] = SA(clients, 'Distance');
+plot(clients(:,1), clients(:,2), 'b.', PAbest(:,1), PAbest(:,2), '.r');
+title('Solution after optimization');
+
+Clientes_nao_atendidos = length(PAC(PAC==0))

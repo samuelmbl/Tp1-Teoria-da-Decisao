@@ -8,18 +8,7 @@
 % =========================================================================
 
 
-function [Retorno, QuantPA] = fobj(LocPA, ClientesAtend, BandaConsumidaPA)
-    numClientes = 500;
-    percentualAtend = 0.95;
-    
-    
-    penClientesAtend = max(0, numClientes * percentualAtend - size(find(ClientesAtend ==1),1))^2;
-    penBandaConsumida = 0;
-    
-    for i = 1 : size(BandaConsumidaPA,1)
-        penBandaConsumida = penBandaConsumida + max(0,BandaConsumida(i) - 150)^2;
-    end
-    
-Retorno = size(LocPA,1) + penClientesAtend + penBandaConsumida;  
-QuantPA  = size(LocPA,1);
+function [TotalPA] = fobj(LocPA)
+    TotalPA = length(LocPA(:,1));
+end
 
