@@ -28,6 +28,9 @@ function [xbest, xrbest, xcbest, capital, nfe] = SAdiscreto()
 % Contador de estágios do método
 k = 0;
 
+% Variaveis 
+sigma = 0.25;
+
 % Contador do número de avaliações de f(.)
 nfe = 0; 
 
