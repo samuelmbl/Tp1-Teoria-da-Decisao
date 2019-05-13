@@ -32,24 +32,45 @@ title('Solution after InitialTDist');
 figure
 plot(PAC, '.')
 if (strcmp(Type, 'PW'))
-    repeat = 10;
+    repeat = 30;
 else 
     repeat = 1;
 end
 fsobj = [];
 PABestMatrix = -ones(100,2,repeat);
-i = 0;
 
+i = 0;
 while(i < repeat)
-    [PAbest PACbest, distBest, fobjbest, count, logfobj, logfobjbest] = SA(clients, Type, sigma,WDistance);
+    [PAbest, PACbest, distBest, fobjbest, count, logfobj, logfobjbest] = SA(clients, Type, sigma,WDistance);
     i = i + 1;
     if (strcmp(Type, 'PW')) %obtem os valores para fazer a fronteira pareto
         fsobj(i,1) = fobjAPTotal(PACbest);
         fsobj(i,2) = fobjDist(distBest);
         PABestMatrix(1:length(PAbest),:,i) = PAbest;
     end;
-end 
+end;
+Fronteira = []
+if (strcmp(Type, 'PW'))
+   j = 1;
+   for i = 1: length(fsobj)
+       fsobjfilter = fsobj;
+       fsobjfilter(i,:) = [];
+       if (isempty(fsobjfilter(fsobjfilter(:,1)<=fsobj(i,1) & fsobjfilter(:,2)<=fsobj(i,2))))
+           Fronteira(j,1) = fsobj(i,1);
+           Fronteira(j,2) = fsobj(i,2);
+           j = j + 1;
+       end
+   end
+end
 
+figure
+plot(fsobj(:,1),fsobj(:,2),'.K');
+ylabel('FOBJDistancia');
+xlabel('FOBJ Total PA');
+hold on;
+plot(Fronteira(:,1),Fronteira(:,2),'.r');
+
+figure
 plot(clients(:,1), clients(:,2), 'b.', PAbest(:,1), PAbest(:,2), '.r');
 title('Solution after optimization');
 
