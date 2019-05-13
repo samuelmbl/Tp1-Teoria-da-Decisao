@@ -1,4 +1,4 @@
-function [to, PA, count] = initialT(PA_ref, clients, PAC, dist, sigma, Type)
+function [to, PA, count] = initialT(PA_ref, clients, PAC, dist, sigma, Type, WDistance)
 %     Types:
 %     'Distance' = will calculate t0 with fobjDist(dist)
 %     'APTotal' = will calculate t0 with fobjAPTotal(dist)
@@ -12,7 +12,9 @@ function [to, PA, count] = initialT(PA_ref, clients, PAC, dist, sigma, Type)
     if strcmp(Type, 'Distance'),
         x0 = fobjDist(dist);
     elseif strcmp(Type, 'APTotal'),
-        x0 = fobjAPTotal(PA_ref);
+        x0 = fobjAPTotal(PAC);
+    elseif strcmp(Type, 'PW'),
+        x0 = WDistance*fobjDistWP(dist) + (1-WDistance)*fobjAPTotalWP(PAC);
     end;
     
     DeltaE(1) = x0;
@@ -25,6 +27,8 @@ function [to, PA, count] = initialT(PA_ref, clients, PAC, dist, sigma, Type)
         xi = fobjDist(new_dist);
     elseif strcmp(Type, 'APTotal'),
         xi = fobjAPTotal(PA);
+    elseif strcmp(Type, 'PW'),
+        xi = WDistance*fobjDistWP(new_dist) + (1-WDistance)*fobjAPTotalWP(PA);
     end;
         DeltaE(j) = abs(xi-x0);
         j = j + 1;

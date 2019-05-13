@@ -1,4 +1,4 @@
-function [PAbest, PACbest, distbest, fobjbest, count, logfobj, logfobjbest] = SA(clients, Type)
+function [PAbest, PACbest, distbest, fobjbest, count, logfobj, logfobjbest] = SA(clients, Type, sigma, WDistance)
     PA = [];
     PAC = [];
     dist = [];
@@ -14,25 +14,24 @@ function [PAbest, PACbest, distbest, fobjbest, count, logfobj, logfobjbest] = SA
     % Contador de estágios do método
     k = 0;
 
-    % Variaveis 
-    sigma = 0.25;
-
     % Contador do número de avaliações de f(.)
     count = 1; 
-
+    n = 2;
     % Gera solução inicial
     [PA, PAC, dist] = initialSol(clients, PA_max, x_max, y_max);
-    n = 2;
-    figure(1)
-    plot(PA(:,1), PA(:,2), 'b.');
+     
+%     figure(1)
+%     plot(PA(:,1), PA(:,2), 'b.');
 
     % Define temperatura inicial
-    [to, PA, count] = initialT(PA, clients, PAC, dist, sigma, Type);
+    [to, PA, count] = initialT(PA, clients, PAC, dist, sigma, Type,WDistance);
     [PAC dist] = selectPACcalcDist(PA, clients);
     if strcmp(Type, 'Distance'),
         fobj = fobjDist(dist)
     elseif strcmp(Type, 'APTotal'),
-        fobj = fobjAPTotal(dist)
+        fobj = fobjAPTotal(PAC)
+    elseif strcmp(Type, 'PW'),
+        fobj = WDistance*fobjDistWP(dist) + (1-WDistance)*fobjAPTotalWP(PAC);
     end;
     t = to;
 
@@ -49,7 +48,7 @@ function [PAbest, PACbest, distbest, fobjbest, count, logfobj, logfobjbest] = SA
     numEstagiosEstagnados = 0;
 
     % Critério de parada
-    while (numEstagiosEstagnados <= 10 && count < 10000), 
+    while (numEstagiosEstagnados <= 20 && count < 20000), 
 
         % Critérios para mudança de temperatura
         numAceites = 0;
@@ -61,11 +60,15 @@ function [PAbest, PACbest, distbest, fobjbest, count, logfobj, logfobjbest] = SA
         while (numAceites < 12*n && numTentativas < 100*n),
 
             % Gera uma solução na vizinhança de PA
+            
             [new_PA new_PAC new_dist] = generateNewSolution(PA, clients, sigma);
+            
             if strcmp(Type, 'Distance'),
                 new_fobj = fobjDist(new_dist);
             elseif strcmp(Type, 'APTotal'),
-                new_fobj = fobjAPTotal(new_PA);
+                new_fobj = fobjAPTotal(new_PAC);
+            elseif strcmp(Type, 'PW'),
+                new_fobj = WDistance*fobjDistWP(new_dist) + (1-WDistance)*fobjAPTotalWP(new_PAC);
             end;
             
 %             [yretorno,ycusto] = fobj(y,projetos,capital);
@@ -73,7 +76,7 @@ function [PAbest, PACbest, distbest, fobjbest, count, logfobj, logfobjbest] = SA
             logfobj(end+1) = new_fobj;
             % Atualiza solução    
             DeltaE = new_fobj - fobj;
-            if (DeltaE <= 0 || rand <= exp(-DeltaE/t)),
+            if(DeltaE <= 0 || rand <= exp(-DeltaE/(t))),
                 PA = new_PA;
                 PAC = new_PAC;
                 dist = new_dist;

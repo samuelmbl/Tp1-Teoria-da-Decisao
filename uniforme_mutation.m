@@ -16,9 +16,15 @@
 function y = uniforme_mutation(x,ub,lb,sigma)
 
 D = 2*rand(length(x),length(x(1,:))) - 1;
-delta(:,1) = sigma*(ub(1) - lb(1))*D(:,1);
-delta(:,2) = sigma*(ub(2) - lb(2))*D(:,2);
-
+% delta(:,1) = sigma*(ub(1) - lb(1))*D(:,1);
+% delta(:,2) = sigma*(ub(2) - lb(2))*D(:,2);
+if (rand() < 0.4)
+    delta(:,1) = sigma*(ub(1) - lb(1))*D(:,1);
+    delta(:,2) = sigma*(ub(2) - lb(2))*D(:,2);
+else
+    delta(:,1) = sigma*(100)*D(:,1);
+    delta(:,2) = sigma*(100)*D(:,2);
+end 
 y = x + 1*delta;
 y = boxConstraints(y, ub, lb);
 
