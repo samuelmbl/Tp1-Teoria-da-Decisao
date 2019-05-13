@@ -21,16 +21,18 @@ function y = neighbor(PAPos,ub,lb,sigma)
 %sigma =>
 
     size = length(PAPos);
-
+    if size < 30
+       
+    end 
     i = rand();
     % PANum =  unique(PACli);
     % CliAtendPorPA = [PANum, histc(PACli(:),PANum)];
     % CliAtendPorPAOrder = sortrows(CliAtendPorPA,2);
     % PioresPAs = CliAtendPorPAOrder(1:3,1); % PAs que atendem menos clientes
-    if i <= 0.33
+    if i <= 0.4
         y = uniforme_mutation(PAPos,ub, lb,sigma);
 
-    elseif i <= 0.5
+    elseif i <= 0.6
         y = PAPos;
         r = randperm(size,4);
         p = rand();
@@ -55,7 +57,7 @@ function y = neighbor(PAPos,ub,lb,sigma)
             y(r(4),2) = PAPos(r(3),2);
         end
 
-    elseif i <= 0.75 %Shift
+    elseif i <= 0.9 %Shift
         y = PAPos;
         shiftSize = 10;
         r = randperm(size -(shiftSize + 1),2);
@@ -84,10 +86,11 @@ function y = neighbor(PAPos,ub,lb,sigma)
     else    % Adicionar/Remover Ponto de Acesso
         y = PAPos;
         p = rand();
-        if(p < 0.7), %Probabilidade de remover um ponto
+        if(p < 0.6) %Probabilidade de remover um ponto
             point_removed = randperm(size, 1);
             y(point_removed:size-1,:) = PAPos((point_removed+1):size,:);
-        elseif(size <100), %Probabilidade de adicionar um ponto
+            y = y(1:size-1, :);
+        elseif(size <100) %Probabilidade de adicionar um ponto
             y(end,:) = [(ub(1)-lb(1))*rand(), (ub(2)-lb(2))*rand()];
         end;
         

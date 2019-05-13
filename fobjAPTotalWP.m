@@ -8,7 +8,7 @@
 % =========================================================================
 
 
-function [TotalPA] = fobjAPTotal(PAC)
-    TotalPA = length(unique(PAC))-1;
+function [TotalPA] = fobjAPTotalWP(PAC)
+    TotalPA = (length(unique(PAC))-1)/100;
 end
 
