@@ -17,7 +17,7 @@ y_max = 800;
 sigma = 0.25;
 WDistance = 0.6;
 
-Type = 'PW';
+Type = 'Distance';
 
 [PA, PAC, dist] = initialSol(clients, PA_max, x_max, y_max);
 figure(1)
@@ -61,7 +61,6 @@ if (strcmp(Type, 'PW'))
            j = j + 1;
        end
    end
-end
 
 figure
 plot(fsobj(:,1),fsobj(:,2),'.K');
@@ -69,7 +68,7 @@ ylabel('FOBJDistancia');
 xlabel('FOBJ Total PA');
 hold on;
 plot(Fronteira(:,1),Fronteira(:,2),'.r');
-
+end
 figure
 plot(clients(:,1), clients(:,2), 'b.', PAbest(:,1), PAbest(:,2), '.r');
 title('Solution after optimization');
