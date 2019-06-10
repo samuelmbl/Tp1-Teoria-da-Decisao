@@ -34,7 +34,8 @@ function y = neighbor(PAPos,ub,lb,sigma)
 
     elseif i <= 0.6
         y = PAPos;
-        r = randperm(size,4);
+        r = randperm(size); %randperm(size,4);
+        r = r(1:4);
         p = rand();
 
         if(p<0.2)
@@ -60,7 +61,8 @@ function y = neighbor(PAPos,ub,lb,sigma)
     elseif i <= 0.9 %Shift
         y = PAPos;
         shiftSize = 10;
-        r = randperm(size -(shiftSize + 1),2);
+        r = randperm(size -(shiftSize + 1));%randperm(size -(shiftSize + 1),2);
+        r = r(1:2);
         p = rand();
 
         if (p < 0.2)
@@ -87,7 +89,8 @@ function y = neighbor(PAPos,ub,lb,sigma)
         y = PAPos;
         p = rand();
         if(p < 0.6) %Probabilidade de remover um ponto
-            point_removed = randperm(size, 1);
+            point_removed = randperm(size); %randperm(size, 1);
+            point_removed = point_removed(1);
             y(point_removed:size-1,:) = PAPos((point_removed+1):size,:);
             y = y(1:size-1, :);
         elseif(size <100) %Probabilidade de adicionar um ponto
